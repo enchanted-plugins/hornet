@@ -1,0 +1,11 @@
+{
+  "name": "vigil-change-tracker",
+  "description": "Tracks every file change with semantic diff compression and change classification.",
+  "version": "1.0.0",
+  "author": { "name": "enchanted-plugins" },
+  "license": "MIT",
+  "keywords": ["changes", "diff", "tracking", "semantic", "classification"],
+  "commands": ["./commands/changes.md"],
+  "skills": ["./skills/change-awareness/"],
+  "agents": "./agents/"
+}
