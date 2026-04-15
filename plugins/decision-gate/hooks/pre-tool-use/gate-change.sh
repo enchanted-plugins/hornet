@@ -24,19 +24,20 @@ source "${SHARED_DIR}/constants.sh"
 source "${SHARED_DIR}/sanitize.sh"
 # shellcheck source=../../../../shared/metrics.sh
 source "${SHARED_DIR}/metrics.sh"
+# shellcheck source=../../../../shared/compat.sh
+source "${SHARED_DIR}/compat.sh"
 
-# ── Read hook input from stdin ──
-HOOK_INPUT=$(cat)
+# ── Read hook input from stdin (capped at 1MB) ──
+HOOK_INPUT=$(vigil_read_stdin 1048576)
 
 if ! validate_json "$HOOK_INPUT"; then
   exit 0
 fi
 
-TOOL_INPUT=$(printf "%s" "$HOOK_INPUT" | jq -c '.tool_input // {}' 2>/dev/null)
-HOOK_TRANSCRIPT_PATH=$(printf "%s" "$HOOK_INPUT" | jq -r '.transcript_path // empty' 2>/dev/null)
-
-# ── Extract file path ──
-FILE_PATH=$(printf "%s" "$TOOL_INPUT" | jq -r '.file_path // empty' 2>/dev/null)
+# Extract all fields in a single jq call
+PARSED=$(printf "%s" "$HOOK_INPUT" | jq -r '[.tool_input.file_path // "", .transcript_path // ""] | join("\t")' 2>/dev/null)
+FILE_PATH=$(printf "%s" "$PARSED" | cut -f1)
+HOOK_TRANSCRIPT_PATH=$(printf "%s" "$PARSED" | cut -f2)
 
 if [[ -z "$FILE_PATH" ]]; then
   exit 0
@@ -47,7 +48,7 @@ DECODED=$(printf "%s" "$FILE_PATH" | sed -e 's/%2[eE]/./g' -e 's/%2[fF]/\//g' -e
 if [[ "$DECODED" == *".."* ]]; then exit 0; fi
 
 # ── Session hash ──
-SESSION_HASH=$(md5sum "${HOOK_TRANSCRIPT_PATH}" 2>/dev/null | cut -c1-8 || echo "fallback-$$")
+SESSION_HASH=$(vigil_md5_file "${HOOK_TRANSCRIPT_PATH}" || echo "fallback-$$")
 
 # ── Cooldown check ──
 COOLDOWN_FILE="${VIGIL_CACHE_PREFIX}gate-cooldown-${SESSION_HASH}"

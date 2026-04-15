@@ -24,26 +24,23 @@ source "${SHARED_DIR}/constants.sh"
 source "${SHARED_DIR}/sanitize.sh"
 # shellcheck source=../../../../shared/metrics.sh
 source "${SHARED_DIR}/metrics.sh"
+# shellcheck source=../../../../shared/compat.sh
+source "${SHARED_DIR}/compat.sh"
 
-# ── Read hook input from stdin ──
-HOOK_INPUT=$(cat)
+# ── Read hook input from stdin (capped at 1MB) ──
+HOOK_INPUT=$(vigil_read_stdin 1048576)
 
 if ! validate_json "$HOOK_INPUT"; then
   exit 0
 fi
 
-TOOL_NAME=$(printf "%s" "$HOOK_INPUT" | jq -r '.tool_name // empty' 2>/dev/null)
-TOOL_INPUT=$(printf "%s" "$HOOK_INPUT" | jq -c '.tool_input // {}' 2>/dev/null)
-HOOK_TRANSCRIPT_PATH=$(printf "%s" "$HOOK_INPUT" | jq -r '.transcript_path // empty' 2>/dev/null)
+# Extract all fields in a single jq call
+PARSED=$(printf "%s" "$HOOK_INPUT" | jq -r '[.tool_name // "", .tool_input.file_path // "", .transcript_path // ""] | join("\t")' 2>/dev/null)
+TOOL_NAME=$(printf "%s" "$PARSED" | cut -f1)
+FILE_PATH=$(printf "%s" "$PARSED" | cut -f2)
+HOOK_TRANSCRIPT_PATH=$(printf "%s" "$PARSED" | cut -f3)
 
-if [[ -z "$TOOL_NAME" ]]; then
-  exit 0
-fi
-
-# ── Extract file path ──
-FILE_PATH=$(printf "%s" "$TOOL_INPUT" | jq -r '.file_path // empty' 2>/dev/null)
-
-if [[ -z "$FILE_PATH" ]]; then
+if [[ -z "$TOOL_NAME" ]] || [[ -z "$FILE_PATH" ]]; then
   exit 0
 fi
 
@@ -52,7 +49,7 @@ DECODED=$(printf "%s" "$FILE_PATH" | sed -e 's/%2[eE]/./g' -e 's/%2[fF]/\//g' -e
 if [[ "$DECODED" == *".."* ]]; then exit 0; fi
 
 # ── Session hash ──
-SESSION_HASH=$(md5sum "${HOOK_TRANSCRIPT_PATH}" 2>/dev/null | cut -c1-8 || echo "fallback-$$")
+SESSION_HASH=$(vigil_md5_file "${HOOK_TRANSCRIPT_PATH}" || echo "fallback-$$")
 
 # ── Read latest change entry from change-tracker session cache ──
 CHANGES_CACHE="${VIGIL_CACHE_PREFIX}changes-${SESSION_HASH}.jsonl"
@@ -121,9 +118,10 @@ esac
 # ── V2b: Content-based signal detection ──
 # This is what distinguishes Vigil from a file-type classifier.
 # Read the actual file and detect red-flag patterns.
+# Skip binary files — they produce false positives.
 RED_FLAGS=""
 
-if [[ -f "$FILE_PATH" ]]; then
+if [[ -f "$FILE_PATH" ]] && ! vigil_is_binary "$FILE_PATH"; then
   FILE_CONTENT=$(head -500 "$FILE_PATH" 2>/dev/null || true)
 
   # Test files: detect weakened/gutted assertions
@@ -159,8 +157,10 @@ if [[ -f "$FILE_PATH" ]]; then
       PREV_ENTRY=$(grep -F "\"file\":\"${FILE_PATH}\"" "$CHANGES_CACHE" 2>/dev/null | tail -2 | head -1 || true)
     fi
 
-    # Detect algorithm downgrades
-    HAS_WEAK_CRYPTO=$(printf "%s" "$FILE_CONTENT" | grep -ciE 'HS256|MD5|SHA1[^0-9]|DES[^C]|ECB|eval\(' 2>/dev/null || echo "0")
+    # Detect algorithm downgrades (only in code, not comments)
+    # Strip single-line comments before matching to reduce false positives
+    CODE_ONLY=$(printf "%s" "$FILE_CONTENT" | sed -E 's|(//.*$)||; s|(#.*$)||' 2>/dev/null || echo "$FILE_CONTENT")
+    HAS_WEAK_CRYPTO=$(printf "%s" "$CODE_ONLY" | grep -ciE '"HS256"|'\''HS256'\''|algorithms.*HS256|md5\(|MD5\(|eval\(' 2>/dev/null || echo "0")
     if [[ "$HAS_WEAK_CRYPTO" -gt 0 ]]; then
       LIKELIHOOD=$(jq -n --argjson l "$LIKELIHOOD" 'if $l > 0.3 then 0.3 else $l end' 2>/dev/null || echo "0.3")
       RED_FLAGS="${RED_FLAGS:+${RED_FLAGS},}weak_crypto"
@@ -217,7 +217,7 @@ TRUST_SCORE=${TRUST_SCORE:-"0.5"}
 # ── Write updated trust atomically ──
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-acquire_lock "$TRUST_LOCK" || exit 0
+vigil_acquire_lock "$TRUST_LOCK" || exit 0
 
 # Re-read trust file under lock (may have changed)
 if [[ -f "$TRUST_FILE" ]] && jq empty "$TRUST_FILE" >/dev/null 2>&1; then
