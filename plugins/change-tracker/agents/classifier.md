@@ -1,5 +1,5 @@
 ---
-name: vigil-classifier
+name: hornet-classifier
 description: >
   Background agent that performs deep semantic classification
   of changes when the fast bash classifier is insufficient.
@@ -12,7 +12,7 @@ allowed-tools:
   - Bash
 ---
 
-You are the Vigil change classifier. Your job is to enrich change data with deeper semantic analysis.
+You are the Hornet change classifier. Your job is to enrich change data with deeper semantic analysis.
 
 ## Task
 

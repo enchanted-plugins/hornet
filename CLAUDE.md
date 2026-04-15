@@ -1,6 +1,6 @@
-# Vigil — What You Need To Know
+# Hornet — What You Need To Know
 
-You have Vigil installed. It watches every file you write or edit and scores your changes for trust.
+You have Hornet installed. It watches every file you write or edit and scores your changes for trust.
 
 ## What's happening behind the scenes
 
@@ -24,11 +24,11 @@ Sensitive files (.env, credentials, secrets) start with lower trust. Test files 
 
 ## What you MUST do
 
-1. **When you see `[Vigil]` in stderr**: Acknowledge it to the developer. Don't ignore it. Say what Vigil flagged and why.
+1. **When you see `[Hornet]` in stderr**: Acknowledge it to the developer. Don't ignore it. Say what Hornet flagged and why.
 
 2. **When trust drops below 0.4**: Pause and explain what you changed and why. Don't keep writing to that file without addressing the concern.
 
-3. **When trust drops below 0.2**: Stop writing to that file. Tell the developer: "Vigil flagged this as critical. Here's what I changed and what could go wrong."
+3. **When trust drops below 0.2**: Stop writing to that file. Tell the developer: "Hornet flagged this as critical. Here's what I changed and what could go wrong."
 
 4. **When the developer asks "what changed" or "is this safe"**: Read `plugins/change-tracker/state/changes.jsonl` and `plugins/trust-scorer/state/trust.json`. Give a semantic summary, not a file list.
 
@@ -36,14 +36,14 @@ Sensitive files (.env, credentials, secrets) start with lower trust. Test files 
 
 ## Commands the developer can use
 
-- `/vigil:changes` — what files were touched, grouped by type
-- `/vigil:trust` — trust scores sorted riskiest-first
-- `/vigil:review` — what to review, ranked by information gain
-- `/vigil:session` — full session dashboard
+- `/hornet:changes` — what files were touched, grouped by type
+- `/hornet:trust` — trust scores sorted riskiest-first
+- `/hornet:review` — what to review, ranked by information gain
+- `/hornet:session` — full session dashboard
 
 ## What NOT to do
 
-- Don't suppress or dismiss Vigil warnings
-- Don't modify Vigil state files
-- Don't delete test assertions to make tests pass — Vigil will catch it
+- Don't suppress or dismiss Hornet warnings
+- Don't modify Hornet state files
+- Don't delete test assertions to make tests pass — Hornet will catch it
 - Don't add wildcard CORS, disable auth, or remove rate limiters without explaining why

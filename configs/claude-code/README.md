@@ -1,20 +1,20 @@
 # Claude Code Configuration
 
-This directory contains example Claude Code configuration snippets for use with Vigil.
+This directory contains example Claude Code configuration snippets for use with Hornet.
 
 ## Installing Plugins
 
-After cloning the Vigil repo, add plugins to Claude Code:
+After cloning the Hornet repo, add plugins to Claude Code:
 
 ```bash
 # Add the marketplace (recommended)
-/plugin marketplace add /path/to/vigil
+/plugin marketplace add /path/to/hornet
 
 # Or add individual plugins
-/plugin add /path/to/vigil/plugins/change-tracker
-/plugin add /path/to/vigil/plugins/trust-scorer
-/plugin add /path/to/vigil/plugins/decision-gate
-/plugin add /path/to/vigil/plugins/session-memory
+/plugin add /path/to/hornet/plugins/change-tracker
+/plugin add /path/to/hornet/plugins/trust-scorer
+/plugin add /path/to/hornet/plugins/decision-gate
+/plugin add /path/to/hornet/plugins/session-memory
 ```
 
 ## Recommended Install Order

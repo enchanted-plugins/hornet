@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Vigil shared sanitization utilities
+# Hornet shared sanitization utilities
 
 sanitize_path() {
   local path="$1"

@@ -1,5 +1,5 @@
 {
-  "name": "vigil",
+  "name": "hornet",
   "owner": {
     "name": "enchanted-plugins"
   },
@@ -9,25 +9,25 @@
   },
   "plugins": [
     {
-      "name": "vigil-change-tracker",
+      "name": "hornet-change-tracker",
       "source": "./plugins/change-tracker",
       "description": "Tracks every file change with semantic diff compression and change classification.",
       "category": "development"
     },
     {
-      "name": "vigil-trust-scorer",
+      "name": "hornet-trust-scorer",
       "source": "./plugins/trust-scorer",
       "description": "Bayesian trust scoring of each change with prior-based confidence and posterior updates.",
       "category": "development"
     },
     {
-      "name": "vigil-decision-gate",
+      "name": "hornet-decision-gate",
       "source": "./plugins/decision-gate",
       "description": "Per-change review with information-gain ordering and adversarial self-review for low-trust changes.",
       "category": "development"
     },
     {
-      "name": "vigil-session-memory",
+      "name": "hornet-session-memory",
       "source": "./plugins/session-memory",
       "description": "Session continuity graph for compaction survival. Preserves decision history and learned preferences.",
       "category": "development"

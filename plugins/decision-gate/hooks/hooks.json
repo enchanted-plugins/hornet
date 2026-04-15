@@ -1,5 +1,5 @@
 {
-  "description": "Vigil decision-gate: advisory review before file writes based on trust scores",
+  "description": "Hornet decision-gate: advisory review before file writes based on trust scores",
   "hooks": {
     "PreToolUse": [
       {
