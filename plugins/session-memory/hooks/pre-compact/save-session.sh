@@ -24,20 +24,24 @@ source "${SHARED_DIR}/constants.sh"
 source "${SHARED_DIR}/sanitize.sh"
 # shellcheck source=../../../../shared/metrics.sh
 source "${SHARED_DIR}/metrics.sh"
+# shellcheck source=../../../../shared/compat.sh
+source "${SHARED_DIR}/compat.sh"
 
-# ── Read hook input from stdin ──
-HOOK_INPUT=$(cat)
+# ── Read hook input from stdin (capped at 1MB) ──
+HOOK_INPUT=$(vigil_read_stdin 1048576)
 
 if ! validate_json "$HOOK_INPUT"; then
   exit 0
 fi
 
-HOOK_TRANSCRIPT_PATH=$(printf "%s" "$HOOK_INPUT" | jq -r '.transcript_path // empty' 2>/dev/null)
-HOOK_CWD=$(printf "%s" "$HOOK_INPUT" | jq -r '.cwd // empty' 2>/dev/null)
+# Extract fields in single jq call
+PARSED=$(printf "%s" "$HOOK_INPUT" | jq -r '[.transcript_path // "", .cwd // ""] | join("\t")' 2>/dev/null)
+HOOK_TRANSCRIPT_PATH=$(printf "%s" "$PARSED" | cut -f1)
+HOOK_CWD=$(printf "%s" "$PARSED" | cut -f2)
 HOOK_CWD="${HOOK_CWD:-$(pwd)}"
 
 # ── Session hash ──
-SESSION_HASH=$(md5sum "${HOOK_TRANSCRIPT_PATH}" 2>/dev/null | cut -c1-8 || echo "fallback-$$")
+SESSION_HASH=$(vigil_md5_file "${HOOK_TRANSCRIPT_PATH}" || echo "fallback-$$")
 
 # ── State directories ──
 STATE_DIR="${PLUGIN_ROOT}/state"
