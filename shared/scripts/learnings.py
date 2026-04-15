@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Vigil V6: Gauss Learning — cross-session EMA accumulation.
+"""Hornet V6: Gauss Learning — cross-session EMA accumulation.
 
 Accumulates developer preferences across sessions using exponential
 moving averages of per-type trust rates and review frequencies.

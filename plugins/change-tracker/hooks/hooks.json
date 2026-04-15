@@ -1,5 +1,5 @@
 {
-  "description": "Vigil change-tracker: semantic diff compression after every file write",
+  "description": "Hornet change-tracker: semantic diff compression after every file write",
   "hooks": {
     "PostToolUse": [
       {

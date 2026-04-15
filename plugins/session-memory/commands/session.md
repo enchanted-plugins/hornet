@@ -1,11 +1,11 @@
 ---
-name: vigil:session
+name: hornet:session
 description: >
   Show the current session dashboard. Trust overview, change count,
   review decisions, and cross-session learnings.
 ---
 
-When the user runs `/vigil:session`, generate a comprehensive session report.
+When the user runs `/hornet:session`, generate a comprehensive session report.
 
 ## Data Sources
 
@@ -23,7 +23,7 @@ Optionally run `python3 ${CLAUDE_PLUGIN_ROOT}/../../shared/scripts/session-repor
 
 ```
 ══════════════════════════════════════
- VIGIL SESSION REPORT
+ HORNET SESSION REPORT
 ══════════════════════════════════════
 
  Trust:    avg 0.62 | 4 high, 3 medium, 2 low, 1 critical

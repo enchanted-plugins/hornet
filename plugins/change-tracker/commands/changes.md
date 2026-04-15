@@ -1,11 +1,11 @@
 ---
-name: vigil:changes
+name: hornet:changes
 description: >
   Show all tracked changes in this session, grouped by type and file.
   Includes semantic classification and cluster information.
 ---
 
-When the user runs `/vigil:changes`, generate a change summary by reading state data.
+When the user runs `/hornet:changes`, generate a change summary by reading state data.
 
 ## Data Source
 

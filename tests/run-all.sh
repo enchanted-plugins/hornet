@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Vigil test runner — runs all test scripts, reports pass/fail.
+# Hornet test runner — runs all test scripts, reports pass/fail.
 set -uo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -31,7 +31,7 @@ run_test() {
 }
 
 echo "══════════════════════════════════════"
-echo " VIGIL TEST SUITE"
+echo " HORNET TEST SUITE"
 echo "══════════════════════════════════════"
 echo ""
 

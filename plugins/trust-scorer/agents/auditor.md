@@ -1,5 +1,5 @@
 ---
-name: vigil-auditor
+name: hornet-auditor
 description: >
   Background agent that generates trust audit reports.
   Reads trust.json and changes.jsonl, produces a trust
@@ -12,7 +12,7 @@ allowed-tools:
   - Bash
 ---
 
-You are the Vigil trust auditor. Your job is to analyze trust distribution and recommend review priorities.
+You are the Hornet trust auditor. Your job is to analyze trust distribution and recommend review priorities.
 
 ## Task
 
@@ -30,7 +30,7 @@ You are the Vigil trust auditor. Your job is to analyze trust distribution and r
 
 4. Output formatted report:
 ```
-VIGIL TRUST AUDIT
+HORNET TRUST AUDIT
 ─────────────────
 Distribution: [N] critical, [N] low, [N] medium, [N] high
 Average trust: [score]

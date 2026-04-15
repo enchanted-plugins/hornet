@@ -1,4 +1,4 @@
-# Vigil
+# Hornet
 
 > An @enchanted-plugins product — algorithm-driven, agent-managed, self-learning.
 
@@ -6,7 +6,7 @@ Real-time change comprehension. Bayesian trust scoring. Information-gain review.
 
 **4 plugins. 6 algorithms. 4 agents. Every change accounted for.**
 
-> Claude changed 12 files in 8 turns. I didn't read a single diff. Vigil told me
+> Claude changed 12 files in 8 turns. I didn't read a single diff. Hornet told me
 > the auth migration was safe (trust: 0.82), the config change was not (trust: 0.31),
 > and the test deletions were adversarial (trust: 0.18). I reviewed 2 files instead of 12.
 
@@ -82,13 +82,13 @@ graph LR
     style I fill:#3fb950,color:#0d1117
 ```
 
-## The Science Behind Vigil
+## The Science Behind Hornet
 
 Six named algorithms power every decision:
 
 ### V1. Semantic Diff Compression (Change Tracker)
 
-Raw diffs are noise. Vigil classifies each change by type and clusters related changes across files.
+Raw diffs are noise. Hornet classifies each change by type and clusters related changes across files.
 
 Change types: `source_code`, `config_change`, `test_change`, `documentation`, `schema_change`, `dependency_change`.
 Impact radius: local (1 file), module (2-5 files), systemic (6+ files).
@@ -154,45 +154,45 @@ Exponential moving average over per-type trust rates across sessions.
 
 $$r_{new} = \alpha \cdot s_{current} + (1 - \alpha) \cdot r_{prior}, \quad \alpha = 0.3$$
 
-After N sessions, Vigil knows: config changes always get flagged, test changes are usually safe,
+After N sessions, Hornet knows: config changes always get flagged, test changes are usually safe,
 this developer always reviews schema changes carefully. Adapts priors accordingly.
 
 ## Install
 
 ```
-/plugin marketplace add enchanted-plugins/vigil
+/plugin marketplace add enchanted-plugins/hornet
 ```
 
 Start with change-tracker + trust-scorer:
 
 ```
-/plugin install change-tracker@vigil
-/plugin install trust-scorer@vigil
+/plugin install change-tracker@hornet
+/plugin install trust-scorer@hornet
 ```
 
 Full suite:
 
 ```
-/plugin install change-tracker@vigil
-/plugin install trust-scorer@vigil
-/plugin install decision-gate@vigil
-/plugin install session-memory@vigil
+/plugin install change-tracker@hornet
+/plugin install trust-scorer@hornet
+/plugin install decision-gate@hornet
+/plugin install session-memory@hornet
 ```
 
 Or manually:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/enchanted-plugins/vigil/main/install.sh)
+bash <(curl -s https://raw.githubusercontent.com/enchanted-plugins/hornet/main/install.sh)
 ```
 
 ## 4 Plugins, 4 Agents, 6 Algorithms
 
 | Plugin | Hook | Command | What |
 |--------|------|---------|------|
-| change-tracker | PostToolUse | `/vigil:changes` | Semantic diff compression + classification |
-| trust-scorer | PostToolUse | `/vigil:trust` | Bayesian trust scoring + alerts |
-| decision-gate | PreToolUse | `/vigil:review` | IG-ordered review + adversarial questions |
-| session-memory | PreCompact | `/vigil:session` | Continuity graph + Gauss learning |
+| change-tracker | PostToolUse | `/hornet:changes` | Semantic diff compression + classification |
+| trust-scorer | PostToolUse | `/hornet:trust` | Bayesian trust scoring + alerts |
+| decision-gate | PreToolUse | `/hornet:review` | IG-ordered review + adversarial questions |
+| session-memory | PreCompact | `/hornet:session` | Continuity graph + Gauss learning |
 
 | Agent | Model | Plugin | What |
 |-------|-------|--------|------|
@@ -226,10 +226,10 @@ session-memory/state/
 
 | Command | Plugin | What |
 |---------|--------|------|
-| `/vigil:changes` | change-tracker | All changes grouped by type and file |
-| `/vigil:trust` | trust-scorer | Trust scores sorted riskiest-first |
-| `/vigil:review` | decision-gate | IG-ranked review queue with adversarial questions |
-| `/vigil:session` | session-memory | Full session dashboard |
+| `/hornet:changes` | change-tracker | All changes grouped by type and file |
+| `/hornet:trust` | trust-scorer | Trust scores sorted riskiest-first |
+| `/hornet:review` | decision-gate | IG-ranked review queue with adversarial questions |
+| `/hornet:session` | session-memory | Full session dashboard |
 
 ## How Trust Scoring Works
 
@@ -241,7 +241,7 @@ session-memory/state/
 
 ## How Information-Gain Ordering Works
 
-Not all files are equally worth reviewing. Vigil ranks by uncertainty:
+Not all files are equally worth reviewing. Hornet ranks by uncertainty:
 - Trust 0.5 → IG 1.0 (maximum uncertainty — you need to look at this)
 - Trust 0.1 → IG 0.47 (clearly bad — you already know)
 - Trust 0.9 → IG 0.47 (clearly good — don't waste time)
@@ -250,7 +250,7 @@ Review the uncertain files first. Skip the ones where trust is already decided.
 
 ## vs Everything Else
 
-| | Vigil | Gryph | Context Mode | ClaudeWatch | Anthropic Review |
+| | Hornet | Gryph | Context Mode | ClaudeWatch | Anthropic Review |
 |---|---|---|---|---|---|
 | Real-time awareness | in-session | post-hoc | — | — | post-PR |
 | Trust scoring | Bayesian | — | — | — | — |
