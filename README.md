@@ -159,31 +159,24 @@ this developer always reviews schema changes carefully. Adapts priors accordingl
 
 ## Install
 
+Hornet is a **bundle** — all 4 plugins install together. They feed each other at runtime (change-tracker emits semantic diffs → trust-scorer rates them with a Bayesian prior → decision-gate reviews them in information-gain order → session-memory preserves the decision graph across compactions), so every plugin lists the other three as dependencies. Claude Code resolves the whole pipeline from one install.
+
+**In Claude Code** (recommended):
+
 ```
 /plugin marketplace add enchanted-plugins/hornet
+/plugin install hornet-change-tracker@hornet
 ```
 
-Start with change-tracker + trust-scorer:
+The second command installs all 4 via auto-resolved dependencies. Any of the 4 names works (`hornet-trust-scorer@hornet`, `hornet-decision-gate@hornet`, `hornet-session-memory@hornet`) — they're peers. `change-tracker` is the natural entry point because every other plugin reads its output. Verify with `/plugin list` — you should see all 4.
 
-```
-/plugin install change-tracker@hornet
-/plugin install trust-scorer@hornet
-```
-
-Full suite:
-
-```
-/plugin install change-tracker@hornet
-/plugin install trust-scorer@hornet
-/plugin install decision-gate@hornet
-/plugin install session-memory@hornet
-```
-
-Or manually:
+**Via shell** (also installs `shared/*.sh` and `shared/scripts/*.py` locally so hooks work offline):
 
 ```bash
 bash <(curl -s https://raw.githubusercontent.com/enchanted-plugins/hornet/main/install.sh)
 ```
+
+> **Why no à la carte?** Installing only `trust-scorer` would score against no diffs; installing only `decision-gate` would review with no trust context. The pipeline is the product.
 
 ## 4 Plugins, 4 Agents, 6 Algorithms
 

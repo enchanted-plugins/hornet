@@ -7,5 +7,10 @@
   "keywords": ["review", "decision", "gate", "adversarial", "information-gain"],
   "commands": ["./commands/review.md"],
   "skills": ["./skills/review-guidance/"],
-  "agents": "./agents/"
+  "agents": "./agents/",
+  "dependencies": [
+    "hornet-change-tracker",
+    "hornet-session-memory",
+    "hornet-trust-scorer"
+  ]
 }

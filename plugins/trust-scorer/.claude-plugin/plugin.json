@@ -7,5 +7,10 @@
   "keywords": ["trust", "bayesian", "scoring", "confidence", "risk"],
   "commands": ["./commands/trust.md"],
   "skills": ["./skills/trust-assessment/"],
-  "agents": "./agents/"
+  "agents": "./agents/",
+  "dependencies": [
+    "hornet-change-tracker",
+    "hornet-decision-gate",
+    "hornet-session-memory"
+  ]
 }
