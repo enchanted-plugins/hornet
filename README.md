@@ -1,5 +1,13 @@
 # Hornet
 
+<p align="center">
+  <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-3fb950?style=for-the-badge"></a>
+  <img alt="4 plugins" src="https://img.shields.io/badge/Plugins-4-bc8cff?style=for-the-badge">
+  <img alt="6 algorithms" src="https://img.shields.io/badge/Algorithms-6-58a6ff?style=for-the-badge">
+  <img alt="4 agents" src="https://img.shields.io/badge/Agents-4-d29922?style=for-the-badge">
+  <img alt="Bayesian trust scoring" src="https://img.shields.io/badge/Bayesian-Trust-f0883e?style=for-the-badge">
+</p>
+
 > An @enchanted-plugins product — algorithm-driven, agent-managed, self-learning.
 
 Real-time change comprehension. Bayesian trust scoring. Information-gain review.
