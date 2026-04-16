@@ -9,6 +9,12 @@
   },
   "plugins": [
     {
+      "name": "full",
+      "source": "./plugins/full",
+      "description": "Meta-plugin. One install pulls in all 4 Hornet plugins via dependency resolution.",
+      "category": "meta"
+    },
+    {
       "name": "hornet-change-tracker",
       "source": "./plugins/change-tracker",
       "description": "Tracks every file change with semantic diff compression and change classification.",

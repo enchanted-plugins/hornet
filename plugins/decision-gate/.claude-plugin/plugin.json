@@ -2,15 +2,22 @@
   "name": "hornet-decision-gate",
   "description": "Per-change review with information-gain ordering and adversarial self-review for low-trust changes.",
   "version": "1.0.0",
-  "author": { "name": "enchanted-plugins" },
+  "author": {
+    "name": "enchanted-plugins"
+  },
   "license": "MIT",
-  "keywords": ["review", "decision", "gate", "adversarial", "information-gain"],
-  "commands": ["./commands/review.md"],
-  "skills": ["./skills/review-guidance/"],
-  "agents": "./agents/",
-  "dependencies": [
-    "hornet-change-tracker",
-    "hornet-session-memory",
-    "hornet-trust-scorer"
-  ]
+  "keywords": [
+    "review",
+    "decision",
+    "gate",
+    "adversarial",
+    "information-gain"
+  ],
+  "commands": [
+    "./commands/review.md"
+  ],
+  "skills": [
+    "./skills/review-guidance/"
+  ],
+  "agents": "./agents/"
 }
