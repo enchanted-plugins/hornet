@@ -7,5 +7,10 @@
   "keywords": ["changes", "diff", "tracking", "semantic", "classification"],
   "commands": ["./commands/changes.md"],
   "skills": ["./skills/change-awareness/"],
-  "agents": "./agents/"
+  "agents": "./agents/",
+  "dependencies": [
+    "hornet-decision-gate",
+    "hornet-session-memory",
+    "hornet-trust-scorer"
+  ]
 }

@@ -7,5 +7,10 @@
   "keywords": ["session", "memory", "compaction", "graph", "continuity", "learning"],
   "commands": ["./commands/session.md"],
   "skills": ["./skills/session-awareness/"],
-  "agents": "./agents/"
+  "agents": "./agents/",
+  "dependencies": [
+    "hornet-change-tracker",
+    "hornet-decision-gate",
+    "hornet-trust-scorer"
+  ]
 }
