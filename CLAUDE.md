@@ -13,7 +13,7 @@ Audience: Claude. Hornet watches file changes, scores each for trust with a Baye
 
 ## Algorithms
 
-V1 Semantic Diff Compression · V2 Bayesian Trust Scoring · V3 Information-Gain Ordering · V4 Session Continuity Graph · V5 Adversarial Self-Review · V6 Gauss Learning. Derivations: `docs/science/README.md`.
+V1 Semantic Diff Compression · V2 Bayesian Trust Scoring · V3 Information-Gain Ordering · V4 Session Continuity Graph · V5 Adversarial Self-Review · V6 Gauss Learning. Derivations in `README.md` § *The Science Behind Hornet*.
 
 ## Behavioral contracts
 
@@ -52,7 +52,7 @@ Never write these directly — owned by hooks and agents.
 
 ## Agent tiers
 
-All 4 agents documented in `./plugins/*/agents/*.md` with explicit output contracts. Tiers per `flux/docs/brand-guide.md`:
+All 4 agents documented in `./plugins/*/agents/*.md` with explicit output contracts. Tiers follow the @enchanted-plugins convention (Orchestrator/Opus, Executor/Sonnet, Validator/Haiku):
 
 - `classifier` (Haiku) · `auditor` (Haiku) · `restorer` (Haiku) — validators
 - `adversary` (Sonnet) — executor (diff-grounded reasoning needs real analysis)
@@ -60,7 +60,7 @@ All 4 agents documented in `./plugins/*/agents/*.md` with explicit output contra
 ## Anti-patterns
 
 - **Queue reordering.** Presenting the review queue in your own ordering (most recent, smallest, etc). IG ordering is the product; overriding it defeats the point.
-- **Test-assertion deletion.** Removing `expect`/`assert` calls to make tests pass. V1 classifies this as `test_change` with punitive likelihood; trust collapses. [Real incident class — see `docs/science/README.md`.]
+- **Test-assertion deletion.** Removing `expect`/`assert` calls to make tests pass. V1 classifies this as `test_change` with punitive likelihood; trust collapses below 0.2 fast.
 - **Silent override.** Waiving a low-trust flag without surfacing it. V6 adapts priors from real decisions; unlogged overrides poison learning.
 - **Re-read `changes.jsonl` every turn.** It's append-only; read once per session or when explicitly asked for fresh state. Repeated reads waste context (and trigger Allay's A5 duplicate block if co-installed).
 - **State-file mutation.** Editing `trust.json`, `changes.jsonl`, or `session-graph.json` by hand to silence a flag. Breaks V2's posterior and V6's EMA.
