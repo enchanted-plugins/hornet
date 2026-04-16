@@ -10,6 +10,22 @@ Real-time change comprehension. Bayesian trust scoring. Information-gain review.
 > the auth migration was safe (trust: 0.82), the config change was not (trust: 0.31),
 > and the test deletions were adversarial (trust: 0.18). I reviewed 2 files instead of 12.
 
+## Contents
+
+- [The Problem](#the-problem)
+- [How It Works](#how-it-works)
+- [The Science Behind Hornet](#the-science-behind-hornet)
+- [Install](#install)
+- [4 Plugins, 4 Agents, 6 Algorithms](#4-plugins-4-agents-6-algorithms)
+- [What You Get Per Session](#what-you-get-per-session)
+- [Commands](#commands)
+- [How Trust Scoring Works](#how-trust-scoring-works)
+- [How Information-Gain Ordering Works](#how-information-gain-ordering-works)
+- [vs Everything Else](#vs-everything-else)
+- [Architecture](#architecture)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## The Problem
 
 The review-and-comprehension loop eats 40-60% of every Claude Code session:
@@ -20,6 +36,8 @@ The review-and-comprehension loop eats 40-60% of every Claude Code session:
 - 10-20% of sessions are abandoned due to unexpected changes
 
 ## How It Works
+
+Four plugins, one concern each, bound to specific hook points. **decision-gate** on `PreToolUse` orders pending reviews by information gain (V3) and red-teams low-trust changes (V5). **change-tracker** on `PostToolUse` classifies and clusters every diff (V1). **trust-scorer** on `PostToolUse` updates a Beta-Bernoulli posterior per file (V2). **session-memory** on `PreCompact` builds a continuity graph and persists cross-session learnings (V4, V6). The diagram below shows the bindings and state outputs.
 
 ```mermaid
 graph TD
@@ -63,6 +81,8 @@ graph TD
 Each plugin owns one concern. No overlap. No dependencies between plugins.
 
 ### Session Lifecycle
+
+Every file change passes the `PreToolUse` gate (decision-gate), the tool executes, then `PostToolUse` updates change-tracker and trust-scorer. When context fills, `PreCompact` triggers session-memory to write `session-graph.json` before the wipe. On resume, the restorer agent reads it back autonomously.
 
 ```mermaid
 graph LR
