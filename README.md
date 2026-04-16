@@ -1,6 +1,6 @@
 # Hornet
 
-<p align="center">
+<p>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-3fb950?style=for-the-badge"></a>
   <img alt="4 plugins" src="https://img.shields.io/badge/Plugins-4-bc8cff?style=for-the-badge">
   <img alt="6 algorithms" src="https://img.shields.io/badge/Algorithms-6-58a6ff?style=for-the-badge">
