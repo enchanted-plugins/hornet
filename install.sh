@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Hornet installer. The 4 plugins are a coordinated bundle — they install
-# together or not at all (see .claude-plugin/plugin.json → dependencies).
+# Hornet installer. The 4 plugins are a coordinated pipeline; the `full`
+# meta-plugin pulls them all in via one dependency-resolution pass.
 set -euo pipefail
 
 REPO="https://github.com/enchanted-plugins/hornet"
@@ -31,25 +31,20 @@ ok "Hook scripts marked executable"
 cat <<'EOF'
 
 ─────────────────────────────────────────────────────────────────────────
-  Hornet is a bundle. The 4 plugins feed each other at runtime —
-  change-tracker emits the semantic diffs that trust-scorer rates with
-  a Bayesian prior, decision-gate reviews changes in information-gain
-  order using those scores, and session-memory preserves the decision
-  graph across compactions. Installing only one breaks the pipeline,
-  so every plugin.json lists the other three as dependencies and
-  Claude Code pulls them in together.
+  Hornet ships as 4 plugins that feed each other (change-tracker →
+  trust-scorer → decision-gate → session-memory). The `full` meta-plugin
+  lists all four as dependencies so one install pulls in the whole chain.
 ─────────────────────────────────────────────────────────────────────────
 
   Finish in Claude Code with TWO commands:
 
     /plugin marketplace add enchanted-plugins/hornet
-    /plugin install hornet-change-tracker@hornet
+    /plugin install full@hornet
 
-  The second command installs all 4 plugins via dependency resolution.
-  (Any of the 4 names works — they're peers. change-tracker is the
-  natural entry point because every other plugin reads its output.)
+  That installs all 4 plugins via dependency resolution. To cherry-pick
+  a single plugin instead, use e.g. `/plugin install hornet-trust-scorer@hornet`.
 
   Verify with:   /plugin list
-  Expected:      4 plugins installed under the hornet marketplace.
+  Expected:      full + 4 plugins installed under the hornet marketplace.
 
 EOF
