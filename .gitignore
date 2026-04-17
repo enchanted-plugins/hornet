@@ -23,3 +23,8 @@ Thumbs.db
 __pycache__/
 *.pyc
 *.pyo
+
+# Asset toolchain (mermaid-cli + mathjax-full are dev-only; SVGs are committed)
+docs/assets/node_modules/
+docs/assets/package.json
+docs/assets/package-lock.json
