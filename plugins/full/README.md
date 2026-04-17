@@ -17,3 +17,7 @@ Claude Code resolves the four dependencies and installs:
 - `hornet-trust-scorer` — Bayesian posterior per file change
 
 If you want to cherry-pick a single plugin (e.g. just `hornet-trust-scorer`), you can — but the plugins feed each other at runtime (change-tracker → trust-scorer → decision-gate → session-memory), so you'll typically want them all.
+
+## Behavioral modules
+
+Inherits the [shared behavioral modules](../../shared/) via root [CLAUDE.md](../../CLAUDE.md) — discipline, context, verification, delegation, failure-modes, tool-use, skill-authoring, hooks, precedent.
