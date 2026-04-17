@@ -48,44 +48,19 @@ The review-and-comprehension loop eats 40-60% of every Claude Code session:
 
 Four plugins, one concern each, bound to specific hook points. **decision-gate** on `PreToolUse` orders pending reviews by information gain (V3) and red-teams low-trust changes (V5). **change-tracker** on `PostToolUse` classifies and clusters every diff (V1). **trust-scorer** on `PostToolUse` updates a Beta-Bernoulli posterior per file (V2). **session-memory** on `PreCompact` builds a continuity graph and persists cross-session learnings (V4, V6). The diagram below shows the bindings and state outputs.
 
-```mermaid
-graph TD
-    CC(["🔧 Claude Code — File Changes"])
+<p align="center">
+  <a href="docs/assets/hooks.mmd" title="View hook-binding diagram source (Mermaid)">
+    <img src="docs/assets/hooks.svg"
+         alt="Hornet hook bindings: Claude Code file changes fan out into decision-gate (PreToolUse · V3/V5), change-tracker (PostToolUse · V1), trust-scorer (PostToolUse · V2), session-memory (PreCompact · V4/V6); each plugin emits its own state artifact (advisory, changes.jsonl, trust.json, session-graph.json)"
+         width="100%" style="max-width:1100px;">
+  </a>
+</p>
 
-    CC -->|PreToolUse| DG
-    CC -->|PostToolUse| CT
-    CC -->|PostToolUse| TS
-    CC -->|PreCompact| SM
+<sub align="center">
 
-    subgraph DG["decision-gate"]
-        DG_V3["V3 Information-Gain Ordering<br/><small>prioritize what to review</small>"]
-        DG_V5["V5 Adversarial Self-Review<br/><small>red-team low-trust changes</small>"]
-    end
+Source: [docs/assets/hooks.mmd](docs/assets/hooks.mmd) · Regeneration command in [docs/assets/README.md](docs/assets/README.md).
 
-    subgraph CT["change-tracker"]
-        CT_V1["V1 Semantic Diff Compression<br/><small>classify and cluster changes</small>"]
-    end
-
-    subgraph TS["trust-scorer"]
-        TS_V2["V2 Bayesian Trust Model<br/><small>prior → posterior per change</small>"]
-    end
-
-    subgraph SM["session-memory"]
-        SM_V4["V4 Continuity Graph<br/><small>decision history + preferences</small>"]
-        SM_V6["V6 Gauss Accumulation<br/><small>cross-session learning</small>"]
-    end
-
-    DG -->|"advisory<br/>(stderr)"| OUT_DG(["gate review"])
-    CT -->|"changes.jsonl"| OUT_CT(["tracked"])
-    TS -->|"trust.json"| OUT_TS(["scored"])
-    SM -->|"session-graph.json<br/>learnings.json"| OUT_SM(["preserved"])
-
-    style CC fill:#0d1117,stroke:#bc8cff,color:#e6edf3
-    style DG fill:#161b22,stroke:#58a6ff,color:#e6edf3
-    style CT fill:#161b22,stroke:#3fb950,color:#e6edf3
-    style TS fill:#161b22,stroke:#d29922,color:#e6edf3
-    style SM fill:#161b22,stroke:#bc8cff,color:#e6edf3
-```
+</sub>
 
 Each plugin owns one concern. No overlap. No dependencies between plugins.
 
@@ -93,23 +68,19 @@ Each plugin owns one concern. No overlap. No dependencies between plugins.
 
 Every file change passes the `PreToolUse` gate (decision-gate), the tool executes, then `PostToolUse` updates change-tracker and trust-scorer. When context fills, `PreCompact` triggers session-memory to write `session-graph.json` before the wipe. On resume, the restorer agent reads it back autonomously.
 
-```mermaid
-graph LR
-    A(["Session Start"]) --> B["File Change"]
-    B --> C{"PreToolUse<br/>decision-gate"}
-    C -->|"trust check"| D["Tool Executes"]
-    D --> E{"PostToolUse<br/>change-tracker<br/>trust-scorer"}
-    E --> B
-    B -.->|"Context full"| F["⚠️ Compaction"]
-    F --> G{"PreCompact<br/>session-memory"}
-    G -->|"session-graph.json"| H["Context Wiped"]
-    H --> I["restorer agent"]
-    I --> J(["Session Continues"])
+<p align="center">
+  <a href="docs/assets/lifecycle.mmd" title="View session-lifecycle diagram source (Mermaid)">
+    <img src="docs/assets/lifecycle.svg"
+         alt="Hornet session lifecycle: session start, file change, PreToolUse (decision-gate) runs trust-check and IG ranking, tool executes, PostToolUse (change-tracker + trust-scorer) classifies and updates posterior; compaction triggers PreCompact (session-memory) to write session-graph.json; context wiped; restorer agent rebuilds; session continues"
+         width="100%" style="max-width:1100px;">
+  </a>
+</p>
 
-    style F fill:#f85149,color:#fff
-    style G fill:#d29922,color:#0d1117
-    style I fill:#3fb950,color:#0d1117
-```
+<sub align="center">
+
+Source: [docs/assets/lifecycle.mmd](docs/assets/lifecycle.mmd) · Regeneration command in [docs/assets/README.md](docs/assets/README.md).
+
+</sub>
 
 ## The Science Behind Hornet
 
@@ -122,26 +93,19 @@ Raw diffs are noise. Hornet classifies each change by type and clusters related 
 Change types: `source_code`, `config_change`, `test_change`, `documentation`, `schema_change`, `dependency_change`.
 Impact radius: local (1 file), module (2-5 files), systemic (6+ files).
 
-$$
-\text{classify}(f) = \begin{cases}
-\text{config} & f \in \lbrace\texttt{.json},\texttt{.yaml},\texttt{.env}\rbrace \\
-\text{test} & f \in \lbrace\texttt{test},\texttt{spec}\rbrace \\
-\text{schema} & f \in \lbrace\texttt{.sql},\texttt{migration}\rbrace \\
-\text{source} & \text{otherwise}
-\end{cases}
-$$
+<p align="center"><img src="docs/assets/math/v1-classify.svg" alt="classify(f) = config if .json/.yaml/.env; test if test/spec; schema if .sql/migration; source otherwise"></p>
 
 ### V2. Bayesian Trust Scoring (Trust Scorer)
 
 Each file change gets a trust score using Beta-Bernoulli conjugate priors.
 
-$$P(\theta | D) = \frac{P(D | \theta) \cdot P(\theta)}{P(D)}, \quad P(\theta) = \text{Beta}(\alpha, \beta)$$
+<p align="center"><img src="docs/assets/math/v2-bayes.svg" alt="P(theta | D) = P(D | theta) · P(theta) / P(D); P(theta) = Beta(alpha, beta)"></p>
 
-Prior: $\text{Beta}(2, 2)$ — mildly uncertain.
-Update: $\alpha_{new} = \alpha + \ell$, $\beta_{new} = \beta + (1 - \ell)$, where $\ell$ is the change-type likelihood.
-Trust: $\frac{\alpha}{\alpha + \beta}$ (posterior mean).
+<p align="center"><img src="docs/assets/math/v2-update.svg" alt="alpha_new = alpha + l; beta_new = beta + (1 - l); trust = alpha / (alpha + beta)"></p>
 
-| Change Type | Likelihood $\ell$ |
+Prior: Beta(2, 2) — mildly uncertain. Update via change-type likelihood ℓ. Trust reported as the posterior mean.
+
+| Change Type | Likelihood ℓ |
 |-------------|------------------|
 | Documentation | 0.95 |
 | Test changes | 0.85 |
@@ -155,10 +119,9 @@ Trust: $\frac{\alpha}{\alpha + \beta}$ (posterior mean).
 
 Help the developer review efficiently by showing the most uncertain changes first.
 
-$$IG(X) = H(X) = -p \log_2 p - (1-p) \log_2 (1-p)$$
+<p align="center"><img src="docs/assets/math/v3-infogain.svg" alt="IG(X) = H(X) = -p log2(p) - (1-p) log2(1-p)"></p>
 
-Maximum at $p = 0.5$ (trust is most uncertain). Changes at trust 0.5 get reviewed first.
-Changes at trust 0.1 or 0.9 are already decided — low review value.
+Maximum at p = 0.5 (trust is most uncertain). Changes at trust 0.5 get reviewed first. Changes at trust 0.1 or 0.9 are already decided — low review value.
 
 ### V4. Session Continuity Graph (Session Memory)
 
@@ -170,7 +133,7 @@ On resumption: "Last session: 15 changes, 2 low-trust files flagged, 3 advisorie
 
 ### V5. Adversarial Self-Review (Decision Gate extension)
 
-For low-trust changes ($\text{trust} < 0.4$), generate specific adversarial questions:
+For low-trust changes (trust < 0.4), generate specific adversarial questions:
 - "This changes the database query from parameterized to string interpolation. SQL injection risk."
 - "This test now asserts `true === true`. The original checked actual business logic."
 - "This deletes the rate limiter. Was rate limiting intentional?"
@@ -181,7 +144,7 @@ Not generic warnings. Specific to the diff content.
 
 Exponential moving average over per-type trust rates across sessions.
 
-$$r_{new} = \alpha \cdot s_{current} + (1 - \alpha) \cdot r_{prior}, \quad \alpha = 0.3$$
+<p align="center"><img src="docs/assets/math/v6-gauss.svg" alt="r_new = alpha · s_current + (1 - alpha) · r_prior; alpha = 0.3"></p>
 
 After N sessions, Hornet knows: config changes always get flagged, test changes are usually safe,
 this developer always reviews schema changes carefully. Adapts priors accordingly.
@@ -255,7 +218,7 @@ session-memory/state/
 
 ## How Trust Scoring Works
 
-1. Every file starts at $\text{Beta}(2, 2)$ — a mildly uncertain prior (mean = 0.5).
+1. Every file starts at Beta(2, 2) — a mildly uncertain prior (mean = 0.5).
 2. Each Write/Edit updates the posterior: high-trust types (docs, tests) push the score up, risky types (config, schema) push it down.
 3. After multiple updates, the posterior narrows — confidence increases.
 4. Reverts are penalized: if a file returns to a previous hash, the likelihood is halved.
