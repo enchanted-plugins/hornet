@@ -1,0 +1,88 @@
+---
+title: Hornet per-session state flow
+config:
+  look: neo
+  theme: dark
+  flowchart:
+    curve: basis
+    padding: 18
+    nodeSpacing: 44
+    rankSpacing: 54
+    htmlLabels: true
+    subGraphTitleMargin:
+      top: 14
+      bottom: 18
+---
+flowchart TB
+    TitleBlock["<div style='font-family:ui-monospace,SFMono-Regular,Consolas,monospace;text-align:center;min-width:940px;padding:6px 10px;line-height:1.8'><div style='color:#58a6ff;font-size:15px;letter-spacing:6px;border-bottom:1px solid #1e3a5f;padding-bottom:10px;margin-bottom:10px'>HORNET &nbsp;·&nbsp; STATE&nbsp;FLOW &nbsp;·&nbsp; CHANGE&nbsp;JOURNALS</div><div style='display:flex;gap:40px;justify-content:center;font-size:11px;color:#8b949e;letter-spacing:2px'><span>DWG&nbsp;&nbsp;<b style='color:#e6edf3'>HNT-003</b></span><span>REV&nbsp;&nbsp;<b style='color:#e6edf3'>A.1</b></span><span>SCALE&nbsp;&nbsp;<b style='color:#e6edf3'>1:1</b></span><span>JOURNALS&nbsp;&nbsp;<b style='color:#e6edf3'>n&nbsp;=&nbsp;4</b></span><span>SHEET&nbsp;&nbsp;<b style='color:#e6edf3'>01&nbsp;/&nbsp;01</b></span></div></div>"]
+
+    subgraph sources["<div style='text-align:center;min-width:940px;font-family:ui-monospace,monospace;color:#8b949e;font-size:11px;letter-spacing:3px'>EVENT&nbsp;SOURCES&nbsp;&nbsp;·&nbsp;&nbsp;HOOK&nbsp;FIRES</div>"]
+        direction LR
+        Pre["<b>PreToolUse</b><br/><small style='color:#6e7681'>Write · Edit · MultiEdit</small>"]
+        Post["<b>PostToolUse</b><br/><small style='color:#6e7681'>Write · Edit · MultiEdit</small>"]
+        Compact["<b>PreCompact</b>"]
+    end
+
+    subgraph ct["<div style='text-align:center;min-width:940px;line-height:2'><span style='font-family:ui-monospace,monospace;color:#8b949e;font-size:11px;letter-spacing:3px'>JOURNAL&nbsp;01</span>&nbsp;&nbsp;·&nbsp;&nbsp;<b style='letter-spacing:2px'>change-tracker / state /</b></div>"]
+        direction LR
+        ct_ch["<div style='text-align:center;line-height:1.7'><code>changes.jsonl</code><br/><small style='color:#6e7681'>Every file change · type · hash · cluster</small></div>"]
+        ct_met["<div style='text-align:center;line-height:1.7'><code>metrics.jsonl</code><br/><small style='color:#6e7681'>V1 semantic-diff change_tracked events</small></div>"]
+    end
+
+    subgraph ts["<div style='text-align:center;min-width:940px;line-height:2'><span style='font-family:ui-monospace,monospace;color:#8b949e;font-size:11px;letter-spacing:3px'>JOURNAL&nbsp;02</span>&nbsp;&nbsp;·&nbsp;&nbsp;<b style='letter-spacing:2px'>trust-scorer / state /</b></div>"]
+        direction LR
+        ts_tr["<div style='text-align:center;line-height:1.7'><code>trust.json</code><br/><small style='color:#6e7681'>V2 per-file Beta parameters + trust scores</small></div>"]
+        ts_learn["<div style='text-align:center;line-height:1.7'><code>learnings.json</code><br/><small style='color:#6e7681'>V6 cross-session Gauss learning data</small></div>"]
+        ts_met["<div style='text-align:center;line-height:1.7'><code>metrics.jsonl</code><br/><small style='color:#6e7681'>trust_scored events</small></div>"]
+    end
+
+    subgraph dg["<div style='text-align:center;min-width:940px;line-height:2'><span style='font-family:ui-monospace,monospace;color:#8b949e;font-size:11px;letter-spacing:3px'>JOURNAL&nbsp;03</span>&nbsp;&nbsp;·&nbsp;&nbsp;<b style='letter-spacing:2px'>decision-gate / state /</b></div>"]
+        dg_met["<div style='text-align:center;line-height:1.7'><code>metrics.jsonl</code><br/><small style='color:#6e7681'>V3 info-gain review_advisory events</small></div>"]
+    end
+
+    subgraph sm["<div style='text-align:center;min-width:940px;line-height:2'><span style='font-family:ui-monospace,monospace;color:#8b949e;font-size:11px;letter-spacing:3px'>JOURNAL&nbsp;04</span>&nbsp;&nbsp;·&nbsp;&nbsp;<b style='letter-spacing:2px'>session-memory / state /</b></div>"]
+        direction LR
+        sm_gr["<div style='text-align:center;line-height:1.7'><code>session-graph.json</code><br/><small style='color:#6e7681'>V4 continuity graph · nodes + edges + trust overview</small></div>"]
+        sm_sum["<div style='text-align:center;line-height:1.7'><code>session-summary.md</code><br/><small style='color:#6e7681'>Human-readable session recap</small></div>"]
+        sm_met["<div style='text-align:center;line-height:1.7'><code>metrics.jsonl</code><br/><small style='color:#6e7681'>session_saved events</small></div>"]
+    end
+
+    Bus["<div style='text-align:center;line-height:1.8;padding:4px 12px'><b style='letter-spacing:1.5px;color:#79c0ff'>ENCHANTED-MCP&nbsp;BUS</b><br/><em style='color:#8b949e;font-size:12px'>hornet.change.classified · hornet.session.continuity.node · hornet.reviewer.availability.changed</em></div>"]
+    Query(["<b>/hornet:changes · /hornet:trust · /hornet:review · /hornet:session</b><br/><small style='color:#8b949e'>skill-invoked pull surface</small>"])
+
+    TitleBlock ~~~ sources
+    Post --> ct_ch
+    ct_ch --> ct_met
+    ct_ch --> ts_tr
+    ts_tr --> ts_learn
+    ts_tr --> ts_met
+    Pre --> dg_met
+    Compact --> sm_gr
+    sm_gr --> sm_sum
+    sm_gr --> sm_met
+    ct_met --> Bus
+    ts_tr --> Bus
+    sm_gr --> Bus
+    ct_ch --> Query
+    ts_tr --> Query
+    dg_met --> Query
+    sm_gr --> Query
+
+    classDef titleBlock fill:#06111f,stroke:#1e3a5f,stroke-width:1px,color:#e6edf3,rx:4,ry:4
+    classDef sourceNode fill:#0a1628,stroke:#1e3a5f,stroke-width:1.5px,color:#e6edf3,rx:8,ry:8
+    classDef journalLine fill:#0a1628,stroke:#1e3a5f,stroke-width:1px,color:#c9d1d9,rx:6,ry:6
+    classDef busNode fill:#0f1d33,stroke:#79c0ff,stroke-width:2px,color:#79c0ff,rx:8,ry:8
+    classDef queryNode fill:#0f1d33,stroke:#3fb950,stroke-width:1.5px,color:#3fb950,rx:14,ry:14
+
+    class TitleBlock titleBlock
+    class Pre,Post,Compact sourceNode
+    class ct_ch,ct_met,ts_tr,ts_learn,ts_met,dg_met,sm_gr,sm_sum,sm_met journalLine
+    class Bus busNode
+    class Query queryNode
+
+    style ct fill:#0f1d33,stroke:#58a6ff,stroke-width:2px,color:#e6edf3,rx:12,ry:12
+    style ts fill:#0f1d33,stroke:#bc8cff,stroke-width:2px,color:#e6edf3,rx:12,ry:12
+    style dg fill:#0f1d33,stroke:#d75952,stroke-width:2px,color:#e6edf3,rx:12,ry:12
+    style sm fill:#0f1d33,stroke:#d29922,stroke-width:2px,color:#e6edf3,rx:12,ry:12
+
+    linkStyle default stroke:#8b949e,stroke-width:1.5px

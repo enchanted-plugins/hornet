@@ -147,6 +147,22 @@ bash <(curl -s https://raw.githubusercontent.com/enchanted-plugins/hornet/main/i
 
 ## What You Get Per Session
 
+Three hook events fan out into four color-coded journals — one per sub-plugin — and converge on the enchanted-mcp bus and the `/hornet:*` query surface. Color maps engines to journals: blue = change-tracker (V1 semantic-diff) · purple = trust-scorer (V2 Bayesian + V6 Gauss learning) · red = decision-gate (V3 info-gain) · yellow = session-memory (V4 continuity graph).
+
+<p align="center">
+  <a href="docs/assets/state-flow.mmd" title="View state-flow diagram source (Mermaid)">
+    <img src="docs/assets/state-flow.svg"
+         alt="Hornet per-session state flow: three hooks (PreToolUse, PostToolUse Write|Edit|MultiEdit, PreCompact) feed four color-coded journals (change-tracker changes+metrics, trust-scorer trust+learnings+metrics, decision-gate metrics, session-memory graph+summary+metrics) converging on the enchanted-mcp bus and the /hornet:* query surface"
+         width="100%" style="max-width:1100px;">
+  </a>
+</p>
+
+<sub align="center">
+
+Source: [docs/assets/state-flow.mmd](docs/assets/state-flow.mmd) · Regeneration command in [docs/assets/README.md](docs/assets/README.md).
+
+</sub>
+
 ```
 change-tracker/state/
 ├── changes.jsonl        # Every file change with type, hash, cluster
