@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: "Hornet"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - alias: klaiderman
+    affiliation: "enchanted-plugins"
+repository-code: "https://github.com/enchanted-plugins/hornet"
+url: "https://github.com/enchanted-plugins/hornet"
+license: MIT
+version: "1.0.0"
+date-released: "2026-04-20"
+abstract: "Change-trust scoring for AI-assisted development: semantic diff, Beta-Bernoulli trust posteriors, information-gain review ordering, session continuity."
+keywords:
+  - claude-code
+  - enchanted-plugins
+  - change-tracking
+  - bayesian-trust
+  - code-review
+  - llm

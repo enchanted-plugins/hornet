@@ -6,6 +6,7 @@
   <img alt="6 algorithms" src="https://img.shields.io/badge/Algorithms-6-58a6ff?style=for-the-badge">
   <img alt="4 agents" src="https://img.shields.io/badge/Agents-4-d29922?style=for-the-badge">
   <img alt="Bayesian trust scoring" src="https://img.shields.io/badge/Bayesian-Trust-f0883e?style=for-the-badge">
+  <a href="https://www.repostatus.org/#active"><img alt="Project Status: Active" src="https://www.repostatus.org/badges/latest/active.svg"></a>
 </p>
 
 > An @enchanted-plugins product — algorithm-driven, agent-managed, self-learning.
@@ -24,6 +25,17 @@ Hornet takes her name from **Hornet of Hollow Knight** — an explorer who survi
 
 The question this plugin answers: *What just happened?*
 
+## Who this is for
+
+- Reviewers drowning in AI-generated diffs who want `review the 2 risky files, not all 12`.
+- Teams who've been burned by silent destructive edits mid-session and want a scored, auditable trail.
+- Engineers who understand that *trust is evidence, not vibes* and want the Bayesian posterior to say so.
+
+Not for:
+
+- Solo hack sessions where every edit is intentional and review friction is pure cost.
+- Teams that want a blocking gate — Hornet is advisory by design (see [shared/conduct/hooks.md](shared/conduct/hooks.md) § Injection over denial).
+
 ## Contents
 
 - [The Problem](#the-problem)
@@ -31,8 +43,10 @@ The question this plugin answers: *What just happened?*
 - [What Makes Hornet Different](#what-makes-hornet-different)
 - [The Full Lifecycle](#the-full-lifecycle)
 - [Install](#install)
+- [Quickstart](#quickstart)
 - [4 Plugins, 4 Agents, 6 Algorithms](#4-plugins-4-agents-6-algorithms)
 - [What You Get Per Session](#what-you-get-per-session)
+- [Roadmap](#roadmap)
 - [The Science Behind Hornet](#the-science-behind-hornet)
 - [Commands](#commands)
 - [How Trust Scoring Works](#how-trust-scoring-works)
@@ -40,7 +54,10 @@ The question this plugin answers: *What just happened?*
 - [vs Everything Else](#vs-everything-else)
 - [Agent Conduct (9 Modules)](#agent-conduct-9-modules)
 - [Architecture](#architecture)
+- [Acknowledgments](#acknowledgments)
+- [Versioning & release cadence](#versioning--release-cadence)
 - [Contributing](#contributing)
+- [Citation](#citation)
 - [License](#license)
 
 ## The Problem
@@ -129,6 +146,18 @@ Claude Code resolves the dependency list and installs all 4 plugins. Verify with
 bash <(curl -s https://raw.githubusercontent.com/enchanted-plugins/hornet/main/install.sh)
 ```
 
+## Quickstart
+
+Install, let Claude edit something, read the trust score. Sixty seconds:
+
+```
+/plugin install full@hornet
+# ...let Claude make any Write / Edit...
+/hornet:trust
+```
+
+Expected: `/hornet:trust` prints per-file rows sorted riskiest-first — trust score, band (HIGH / MEDIUM / LOW), and the specific engine signals (H1 semantic delta, H2 Bayesian posterior, H3 info-gain, H4 continuity) driving the verdict. See [docs/getting-started.md](docs/getting-started.md) for the full guided first run and [THREAT_MODEL.md](THREAT_MODEL.md) for the attacker-input model Hornet is hardened against.
+
 ## 4 Plugins, 4 Agents, 6 Algorithms
 
 | Plugin | Hook | Command | What |
@@ -181,6 +210,10 @@ session-memory/state/
 ├── session-summary.md   # Human-readable session recap
 └── metrics.jsonl        # session_saved events
 ```
+
+## Roadmap
+
+Tracked in [docs/ROADMAP.md](docs/ROADMAP.md) and the shared [ecosystem map](https://github.com/enchanted-plugins/flux/blob/main/docs/ecosystem.md). For upcoming work specific to Hornet, see issues tagged [roadmap](https://github.com/enchanted-plugins/hornet/labels/roadmap).
 
 ## The Science Behind Hornet
 
@@ -303,6 +336,22 @@ Every skill inherits a reusable behavioral contract from [shared/](shared/) — 
 | [hooks.md](shared/conduct/hooks.md) | Advisory-only hooks, injection over denial, fail-open |
 | [precedent.md](shared/conduct/precedent.md) | Log self-observed failures to `state/precedent-log.md`; consult before risky steps |
 
+## Acknowledgments
+
+Hornet builds on foundations laid by others:
+
+- **[Claude Code](https://github.com/anthropics/claude-code)** (Anthropic) — the plugin surface this work extends.
+- **[Keep a Changelog](https://keepachangelog.com/)** — CHANGELOG convention.
+- **[Semantic Versioning](https://semver.org/)** — versioning contract.
+- **[Contributor Covenant](https://www.contributor-covenant.org/)** — Code of Conduct.
+- **[repostatus.org](https://www.repostatus.org/)** — status badge.
+- **[Citation File Format](https://citation-file-format.github.io/)** — citation metadata.
+- **[Conventional Commits](https://www.conventionalcommits.org/)** — commit convention.
+
+## Versioning & release cadence
+
+Hornet follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Breaking changes land on major bumps only; the [CHANGELOG](CHANGELOG.md) flags them explicitly. Release cadence is opportunistic — tags land when accumulated fixes or features justify a cut, not on a fixed schedule. Migration notes between majors live in [docs/upgrading.md](docs/upgrading.md).
+
 ## Architecture
 
 Interactive architecture explorer with plugin diagrams, agent cards, and data flow:
@@ -312,6 +361,21 @@ Interactive architecture explorer with plugin diagrams, agent cards, and data fl
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)
+
+## Citation
+
+If you use this project in research or derivative work, please cite it:
+
+```bibtex
+@software{hornet_2026,
+  title = {Hornet},
+  author = {{Klaiderman}},
+  year = {2026},
+  url = {https://github.com/enchanted-plugins/hornet}
+}
+```
+
+See [CITATION.cff](CITATION.cff) for additional formats (APA, MLA, EndNote).
 
 ## License
 
