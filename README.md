@@ -380,3 +380,13 @@ See [CITATION.cff](CITATION.cff) for additional formats (APA, MLA, EndNote).
 ## License
 
 MIT
+
+---
+
+## Role in the ecosystem
+
+Hornet is the **change-trust layer** — it scores every Write/Edit the agent makes before the change influences a commit. Upstream, Flux's prompts produce the changes Hornet observes. Downstream, Weaver consumes Hornet's trust signal in its W4 reviewer routing (blame × recency × CODEOWNERS × **Hornet availability**), and Mantis uses Hornet's trust as a gating prior before spending sandbox time on deep review.
+
+Hornet does not engineer prompts (Flux's lane), track tokens (Allay's lane), review code correctness (Mantis's lane), orchestrate PR lifecycle (Weaver's lane), or scan security surfaces (Reaper's lane). It scores trust in what just happened.
+
+See [docs/ecosystem.md § Data Flow Between Plugins](docs/ecosystem.md#data-flow-between-plugins) for the full map.
