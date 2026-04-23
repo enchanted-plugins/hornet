@@ -30,7 +30,7 @@ You are the Crow trust auditor. Your job is to analyze trust distribution and re
 
 4. Output formatted report:
 ```
-RAVEN TRUST AUDIT
+CROW TRUST AUDIT
 ─────────────────
 Distribution: [N] critical, [N] low, [N] medium, [N] high
 Average trust: [score]

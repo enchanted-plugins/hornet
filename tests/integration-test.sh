@@ -6,7 +6,7 @@ REPO_ROOT="${SCRIPT_DIR}/.."
 cd "$REPO_ROOT"
 
 echo "══════════════════════════════════════"
-echo " RAVEN INTEGRATION TEST"
+echo " CROW INTEGRATION TEST"
 echo " Full Session Simulation"
 echo "══════════════════════════════════════"
 echo ""

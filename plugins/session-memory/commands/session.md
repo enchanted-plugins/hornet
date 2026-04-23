@@ -23,7 +23,7 @@ Optionally run `python3 ${CLAUDE_PLUGIN_ROOT}/../../shared/scripts/session-repor
 
 ```
 ══════════════════════════════════════
- RAVEN SESSION REPORT
+ CROW SESSION REPORT
 ══════════════════════════════════════
 
  Trust:    avg 0.62 | 4 high, 3 medium, 2 low, 1 critical

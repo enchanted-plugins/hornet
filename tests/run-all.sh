@@ -31,7 +31,7 @@ run_test() {
 }
 
 echo "══════════════════════════════════════"
-echo " RAVEN TEST SUITE"
+echo " CROW TEST SUITE"
 echo "══════════════════════════════════════"
 echo ""
 

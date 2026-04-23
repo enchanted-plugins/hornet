@@ -105,7 +105,7 @@ def generate_report(plugins_dir):
     # Build report
     lines = [
         "",
-        "  RAVEN SESSION REPORT",
+        "  CROW SESSION REPORT",
         "",
         f"  Trust:    avg {avg_trust:.2f} | {high} high, {medium} medium, {low} low, {critical} critical",
         f"  Changes:  {changes_tracked} tracked | {trust_scored} scored | {reviews_issued} reviewed",

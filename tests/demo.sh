@@ -83,7 +83,7 @@ run_pre() {
 # ═══════════════════════════════════════════════
 echo ""
 echo "═══════════════════════════════════════════════"
-echo " RAVEN DEMO — Catching Bad AI Changes"
+echo " CROW DEMO — Catching Bad AI Changes"
 echo "═══════════════════════════════════════════════"
 echo ""
 echo " Scenario: Claude is asked to 'fix the auth tests'."

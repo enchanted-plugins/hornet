@@ -31,7 +31,7 @@ You are the Crow context restorer. After compaction, your job is to restore sess
 
 5. Return a structured restoration summary:
 ```
-RAVEN CONTEXT RESTORED from session at [timestamp]
+CROW CONTEXT RESTORED from session at [timestamp]
 Trust: [high] high, [low] low, [critical] critical
 Changes: [N] files tracked
 Reviews: [N] advisories issued
