@@ -1,5 +1,5 @@
 ---
-title: Raven per-session state flow
+title: Crow per-session state flow
 config:
   look: neo
   theme: dark
@@ -47,8 +47,8 @@ flowchart TB
         sm_met["<div style='text-align:center;line-height:1.7'><code>metrics.jsonl</code><br/><small style='color:#6e7681'>session_saved events</small></div>"]
     end
 
-    Bus["<div style='text-align:center;line-height:1.8;padding:4px 12px'><b style='letter-spacing:1.5px;color:#79c0ff'>ENCHANTED-MCP&nbsp;BUS</b><br/><em style='color:#8b949e;font-size:12px'>raven.change.classified · raven.session.continuity.node · raven.reviewer.availability.changed</em></div>"]
-    Query(["<b>/raven:changes · /raven:trust · /raven:review · /raven:session</b><br/><small style='color:#8b949e'>skill-invoked pull surface</small>"])
+    Bus["<div style='text-align:center;line-height:1.8;padding:4px 12px'><b style='letter-spacing:1.5px;color:#79c0ff'>ENCHANTED-MCP&nbsp;BUS</b><br/><em style='color:#8b949e;font-size:12px'>crow.change.classified · crow.session.continuity.node · crow.reviewer.availability.changed</em></div>"]
+    Query(["<b>/crow:changes · /crow:trust · /crow:review · /crow:session</b><br/><small style='color:#8b949e'>skill-invoked pull surface</small>"])
 
     TitleBlock ~~~ sources
     Post --> ct_ch
