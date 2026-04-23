@@ -367,7 +367,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 If you use this project in research or derivative work, please cite it:
 
 ```bibtex
-@software{raven_2026,
+@software{crow_2026,
   title = {Crow},
   author = {{Klaiderman}},
   year = {2026},

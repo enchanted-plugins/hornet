@@ -4,7 +4,7 @@
 set -euo pipefail
 
 REPO="https://github.com/enchanted-plugins/crow"
-RAVEN_DIR="${HOME}/.claude/plugins/crow"
+CROW_DIR="${HOME}/.claude/plugins/crow"
 
 step() { printf "\n\033[1;36m▸ %s\033[0m\n" "$*"; }
 ok()   { printf "  \033[32m✓\033[0m %s\n" "$*"; }
@@ -14,18 +14,18 @@ step "Crow installer"
 # 1. Clone (or update) the monorepo so shared/*.sh and shared/scripts/*.py are
 #    available locally. Plugins themselves are served via the marketplace
 #    command below — the clone is just for supporting scripts.
-if [[ -d "$RAVEN_DIR/.git" ]]; then
-  git -C "$RAVEN_DIR" pull --ff-only --quiet
-  ok "Updated existing clone at $RAVEN_DIR"
+if [[ -d "$CROW_DIR/.git" ]]; then
+  git -C "$CROW_DIR" pull --ff-only --quiet
+  ok "Updated existing clone at $CROW_DIR"
 else
-  git clone --depth 1 --quiet "$REPO" "$RAVEN_DIR"
-  ok "Cloned to $RAVEN_DIR"
+  git clone --depth 1 --quiet "$REPO" "$CROW_DIR"
+  ok "Cloned to $CROW_DIR"
 fi
 
 # 2. Ensure hook scripts are executable (fresh clones on some filesystems lose +x).
-chmod +x "$RAVEN_DIR"/plugins/*/hooks/*/*.sh 2>/dev/null || true
-chmod +x "$RAVEN_DIR"/shared/*.sh 2>/dev/null || true
-chmod +x "$RAVEN_DIR"/shared/scripts/*.py 2>/dev/null || true
+chmod +x "$CROW_DIR"/plugins/*/hooks/*/*.sh 2>/dev/null || true
+chmod +x "$CROW_DIR"/shared/*.sh 2>/dev/null || true
+chmod +x "$CROW_DIR"/shared/scripts/*.py 2>/dev/null || true
 ok "Hook scripts marked executable"
 
 cat <<'EOF'

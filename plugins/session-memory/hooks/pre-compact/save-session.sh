@@ -28,7 +28,7 @@ source "${SHARED_DIR}/metrics.sh"
 source "${SHARED_DIR}/compat.sh"
 
 # ── Read hook input from stdin (capped at 1MB) ──
-HOOK_INPUT=$(raven_read_stdin 1048576)
+HOOK_INPUT=$(crow_read_stdin 1048576)
 
 if ! validate_json "$HOOK_INPUT"; then
   exit 0
@@ -41,7 +41,7 @@ HOOK_CWD=$(printf "%s" "$PARSED" | cut -f2)
 HOOK_CWD="${HOOK_CWD:-$(pwd)}"
 
 # ── Session hash ──
-SESSION_HASH=$(raven_md5_file "${HOOK_TRANSCRIPT_PATH}" || echo "fallback-$$")
+SESSION_HASH=$(crow_md5_file "${HOOK_TRANSCRIPT_PATH}" || echo "fallback-$$")
 
 # ── State directories ──
 STATE_DIR="${PLUGIN_ROOT}/state"
@@ -90,11 +90,11 @@ FILE_NODES=$(printf "%s" "$CHANGES_DATA" | jq '
 ' 2>/dev/null || echo "[]")
 
 # Count trust categories
-TRUST_HIGH=$(printf "%s" "$TRUST_DATA" | jq --argjson t "$RAVEN_TRUST_HIGH" \
+TRUST_HIGH=$(printf "%s" "$TRUST_DATA" | jq --argjson t "$CROW_TRUST_HIGH" \
   '[to_entries[] | select(.value.score >= $t)] | length' 2>/dev/null || echo "0")
-TRUST_LOW=$(printf "%s" "$TRUST_DATA" | jq --argjson t "$RAVEN_TRUST_LOW" \
+TRUST_LOW=$(printf "%s" "$TRUST_DATA" | jq --argjson t "$CROW_TRUST_LOW" \
   '[to_entries[] | select(.value.score < $t)] | length' 2>/dev/null || echo "0")
-TRUST_CRITICAL=$(printf "%s" "$TRUST_DATA" | jq --argjson t "$RAVEN_TRUST_CRITICAL" \
+TRUST_CRITICAL=$(printf "%s" "$TRUST_DATA" | jq --argjson t "$CROW_TRUST_CRITICAL" \
   '[to_entries[] | select(.value.score < $t)] | length' 2>/dev/null || echo "0")
 
 # Build edges from cluster relationships
@@ -183,18 +183,18 @@ SUMMARY
 
 # ── Enforce 50KB limit ──
 SUMMARY_BYTES=${#SESSION_SUMMARY}
-if [[ "$SUMMARY_BYTES" -gt "$RAVEN_MAX_GRAPH_BYTES" ]]; then
-  SESSION_SUMMARY="${SESSION_SUMMARY:0:$RAVEN_MAX_GRAPH_BYTES}
+if [[ "$SUMMARY_BYTES" -gt "$CROW_MAX_GRAPH_BYTES" ]]; then
+  SESSION_SUMMARY="${SESSION_SUMMARY:0:$CROW_MAX_GRAPH_BYTES}
 
-[truncated, summary exceeded ${RAVEN_MAX_GRAPH_BYTES} bytes]"
+[truncated, summary exceeded ${CROW_MAX_GRAPH_BYTES} bytes]"
 fi
 
 # ── Write atomically with lock ──
-GRAPH_FILE="${STATE_DIR}/${RAVEN_SESSION_GRAPH##*/}"
-SUMMARY_FILE="${STATE_DIR}/${RAVEN_SESSION_SUMMARY##*/}"
+GRAPH_FILE="${STATE_DIR}/${CROW_SESSION_GRAPH##*/}"
+SUMMARY_FILE="${STATE_DIR}/${CROW_SESSION_SUMMARY##*/}"
 GRAPH_TMP="${GRAPH_FILE}.tmp"
 SUMMARY_TMP="${SUMMARY_FILE}.tmp"
-LOCK_DIR="${GRAPH_FILE}${RAVEN_LOCK_SUFFIX}"
+LOCK_DIR="${GRAPH_FILE}${CROW_LOCK_SUFFIX}"
 
 acquire_lock "$LOCK_DIR" || exit 0
 

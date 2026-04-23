@@ -7,7 +7,7 @@
 # GNU Linux: md5sum, sha256sum
 # macOS/BSD: md5, shasum -a 256
 
-raven_md5() {
+crow_md5() {
   # Returns first 8 chars of MD5 hash of input string
   local input="$1"
   if command -v md5sum >/dev/null 2>&1; then
@@ -20,7 +20,7 @@ raven_md5() {
   fi
 }
 
-raven_md5_file() {
+crow_md5_file() {
   # Returns first 8 chars of MD5 hash of a file
   local filepath="$1"
   if command -v md5sum >/dev/null 2>&1; then
@@ -32,7 +32,7 @@ raven_md5_file() {
   fi
 }
 
-raven_sha256_file() {
+crow_sha256_file() {
   # Returns first 16 chars of SHA256 hash of a file
   local filepath="$1"
   if command -v sha256sum >/dev/null 2>&1; then
@@ -47,7 +47,7 @@ raven_sha256_file() {
 
 # ── Binary file detection ──
 
-raven_is_binary() {
+crow_is_binary() {
   # Returns 0 (true) if file appears to be binary
   local filepath="$1"
   if command -v file >/dev/null 2>&1; then
@@ -72,7 +72,7 @@ raven_is_binary() {
 
 # ── Stdin reading with size cap ──
 
-raven_read_stdin() {
+crow_read_stdin() {
   # Read stdin with a size limit (default 1MB)
   local max_bytes="${1:-1048576}"
   head -c "$max_bytes" 2>/dev/null
@@ -80,7 +80,7 @@ raven_read_stdin() {
 
 # ── Stale lock cleanup ──
 
-raven_acquire_lock() {
+crow_acquire_lock() {
   # Same as acquire_lock but cleans stale locks older than 60s
   local lock_dir="$1"
   local retries=50
