@@ -19,6 +19,12 @@ Real-time change comprehension. Bayesian trust scoring. Information-gain review.
 > the auth migration was safe (trust: 0.82), the config change was not (trust: 0.31),
 > and the test deletions were adversarial (trust: 0.18). I reviewed 2 files instead of 12.
 
+## TL;DR
+
+**In plain English:** When Claude edits a dozen files in a session you can't read every diff — and rubber-stamping them all is how silent destructive changes sneak into main.
+
+**Technically:** V2 Beta-Bernoulli posterior scoring updates a per-file trust value on every Write/Edit, seeded at Beta(2,2) and pushed by change type. V3 Information-Gain ordering `IG = H(posterior)` surfaces maximum-uncertainty files first so the two files worth reviewing float to the top. Every advisory carries `(trust_score, change_type, N)` — no advisory ships without a posterior sample count.
+
 ## Origin
 
 **Crow** takes its name from **Alex's Mobs** — a sharp-eyed corvid that perches over disturbances, inspects every object it finds, remembers faces, and sorts friend from threat. Every AI-assisted edit is a disturbance until its diff has been read; Crow reads it for you and scores trust before it reaches main.
