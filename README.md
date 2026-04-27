@@ -21,7 +21,7 @@ Real-time change comprehension. Bayesian trust scoring. Information-gain review.
 
 ## TL;DR
 
-**In plain English:** When Claude edits a dozen files in a session you can't read every diff — and rubber-stamping them all is how silent destructive changes sneak into main.
+**In plain English:** Claude edited fourteen files this session. You'll skim three. Crow ranks the fourteen so the one that breaks production isn't the one you skipped.
 
 **Technically:** V2 Beta-Bernoulli posterior scoring updates a per-file trust value on every Write/Edit, seeded at Beta(2,2) and pushed by change type. V3 Information-Gain ordering `IG = H(posterior)` surfaces maximum-uncertainty files first so the two files worth reviewing float to the top. Every advisory carries `(trust_score, change_type, N)` — no advisory ships without a posterior sample count.
 
